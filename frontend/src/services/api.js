@@ -1,4 +1,7 @@
-const BASE_URL = '/api';
+const RAW_API_BASE = import.meta.env.VITE_API_BASE_URL?.trim();
+const BASE_URL = RAW_API_BASE
+  ? RAW_API_BASE.replace(/\/$/, '')
+  : '/api';
 
 /**
  * Fetches the list of conversations.
