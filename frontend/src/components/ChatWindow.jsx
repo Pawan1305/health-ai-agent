@@ -36,7 +36,7 @@ function WelcomeScreen({ onSuggestionClick }) {
       </h2>
       <p className="text-gray-400 max-w-md mb-10 text-base leading-relaxed">
         Your intelligent healthcare companion. Ask me anything about symptoms, conditions,
-        medications, or general wellness. I'm here to help.
+        medications, or general wellness. I compare multiple AI perspectives and present one focused answer.
       </p>
 
       {/* Suggestion chips */}

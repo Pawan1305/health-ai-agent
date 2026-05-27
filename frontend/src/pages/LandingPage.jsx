@@ -150,7 +150,7 @@ const steps = [
     number: '03',
     icon: Brain,
     title: 'Get Smart Answers',
-    desc: 'Receive detailed, markdown-formatted answers powered by Google Gemini AI, streamed in real-time.',
+    desc: 'Receive detailed, markdown-formatted answers synthesized from multiple AI systems in real-time.',
   },
 ];
 
@@ -233,7 +233,7 @@ export default function LandingPage() {
             className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full px-4 py-1.5 text-sm text-cyan-400 mb-8"
           >
             <Zap size={14} />
-            Powered by Google Gemini 1.5 Flash
+            Powered by Multiple AI Engines
           </motion.div>
 
           <motion.h1
@@ -382,7 +382,7 @@ export default function LandingPage() {
                 Start Chatting Free
                 <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
               </button>
-              <p className="text-gray-600 text-sm mt-4">No credit card required · Powered by Google Gemini</p>
+              <p className="text-gray-600 text-sm mt-4">No credit card required · Powered by multiple AI systems</p>
             </div>
           </div>
         </Section>
@@ -397,7 +397,7 @@ export default function LandingPage() {
           <span className="text-gray-400 font-semibold">MediMind AI</span>
         </div>
         <p>⚠️ For educational purposes only. Always consult a qualified healthcare professional.</p>
-        <p className="mt-1">Built with MERN + Google Gemini · Free & Open Source</p>
+        <p className="mt-1">Built with MERN + Multi-AI Intelligence · Free & Open Source</p>
       </footer>
 
     </div>

@@ -1,13 +1,12 @@
 import { useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
-import { fetchConversations, fetchConversation, deleteConversation, sendMessageStream, fetchProviderStatus } from '../services/api.js';
+import { fetchConversations, fetchConversation, deleteConversation, sendMessageStream } from '../services/api.js';
 import ConversationList from '../components/ConversationList.jsx';
 import ChatWindow from '../components/ChatWindow.jsx';
 import InputArea from '../components/InputArea.jsx';
 import ContextModal from '../components/ContextModal.jsx';
-import AISettingsModal from '../components/AISettingsModal.jsx';
-import { Activity, Menu, X, Plus, BrainCircuit, Settings2 } from 'lucide-react';
+import { Activity, Menu, X, Plus, BrainCircuit } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ChatPage() {
@@ -19,10 +18,6 @@ export default function ChatPage() {
   useEffect(() => {
     fetchConversations()
       .then((convs) => dispatch({ type: 'SET_CONVERSATIONS', payload: convs }))
-      .catch(console.error);
-    // Fetch provider status from backend
-    fetchProviderStatus()
-      .then((status) => dispatch({ type: 'SET_PROVIDER_STATUS', payload: status }))
       .catch(console.error);
   }, []);
 
@@ -120,10 +115,18 @@ export default function ChatPage() {
   );
 
   const handleDeleteConversation = async (convId) => {
-    await deleteConversation(convId).catch(console.error);
-    dispatch({ type: 'DELETE_CONVERSATION', payload: convId });
-    if (state.currentConversationId === convId) {
-      navigate('/chat');
+    try {
+      await deleteConversation(convId);
+      dispatch({ type: 'DELETE_CONVERSATION', payload: convId });
+
+      if (state.currentConversationId === convId) {
+        navigate('/chat');
+      }
+
+      const convs = await fetchConversations();
+      dispatch({ type: 'SET_CONVERSATIONS', payload: convs });
+    } catch (error) {
+      console.error('Failed to delete conversation:', error);
     }
   };
 
@@ -198,26 +201,8 @@ export default function ChatPage() {
                   <span className="ml-auto w-2 h-2 rounded-full bg-emerald-400" title="Context active" />
                 )}
               </button>
-              <button
-                onClick={() => dispatch({ type: 'TOGGLE_AI_SETTINGS' })}
-                className="w-full flex items-center gap-2.5 text-sm text-gray-400 hover:text-indigo-400 hover:bg-indigo-500/10 py-2.5 px-4 rounded-xl transition-all"
-              >
-                <Settings2 size={16} />
-                <span>AI Provider</span>
-                {state.providerStatus && (
-                  <span className={`ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
-                    state.providerStatus.activeProvider === 'openrouter'
-                      ? 'bg-violet-500/20 text-violet-400 border border-violet-500/30'
-                      : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-                  }`}>
-                    {state.providerStatus.activeProvider === 'openrouter' ? 'OpenRouter' : 'Gemini'}
-                  </span>
-                )}
-              </button>
               <div className="text-xs text-gray-700 text-center pt-1">
-                {state.providerStatus
-                  ? `Set via AI_PROVIDER in .env`
-                  : 'Connecting...'}
+                Multi-AI response mode enabled
               </div>
             </div>
           </motion.aside>
@@ -256,17 +241,8 @@ export default function ChatPage() {
               Context Active
             </div>
           )}
-          <div
-            onClick={() => dispatch({ type: 'TOGGLE_AI_SETTINGS' })}
-            title="View AI Provider (set in backend/.env)"
-            className={`cursor-pointer flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold border transition-all hover:scale-105 ${
-              state.providerStatus?.activeProvider === 'openrouter'
-                ? 'bg-violet-500/10 border-violet-500/30 text-violet-400 hover:bg-violet-500/20'
-                : 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20'
-            }`}
-          >
-            <Settings2 size={11} />
-            {state.providerStatus?.activeProvider === 'openrouter' ? 'OpenRouter' : 'Gemini'}
+          <div className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold border bg-cyan-500/10 border-cyan-500/30 text-cyan-400">
+            Multi-AI Insights
           </div>
         </div>
 
@@ -279,9 +255,6 @@ export default function ChatPage() {
 
       {/* ── Context Modal ── */}
       <ContextModal />
-
-      {/* ── AI Settings Modal ── */}
-      <AISettingsModal />
     </div>
   );
 }

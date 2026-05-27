@@ -54,7 +54,7 @@ export default function InputArea({ onSend, isLoading }) {
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask about symptoms, conditions, medications..."
+            placeholder="Describe your issue and get a filtered response from multiple AIs..."
             rows={1}
             disabled={isLoading}
             className="flex-1 bg-transparent text-white placeholder-gray-600 text-sm resize-none focus:outline-none leading-relaxed min-h-[24px] max-h-40 disabled:opacity-50"

@@ -17,9 +17,7 @@ const initialState = {
   isLoading: false,
   sidebarOpen: true,
   contextModalOpen: false,
-  aiSettingsOpen: false,
   medicalContext: getSavedContext(),
-  providerStatus: null,  // fetched from backend: { activeProvider, activeModel, gemini, openrouter }
 };
 
 function reducer(state, action) {
@@ -110,15 +108,6 @@ function reducer(state, action) {
 
     case 'SET_CONTEXT_MODAL':
       return { ...state, contextModalOpen: action.payload };
-
-    case 'TOGGLE_AI_SETTINGS':
-      return { ...state, aiSettingsOpen: !state.aiSettingsOpen };
-
-    case 'SET_AI_SETTINGS':
-      return { ...state, aiSettingsOpen: action.payload };
-
-    case 'SET_PROVIDER_STATUS':
-      return { ...state, providerStatus: action.payload };
 
     case 'DELETE_CONVERSATION': {
       const filtered = state.conversations.filter(c => c._id !== action.payload);

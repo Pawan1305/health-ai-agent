@@ -10,15 +10,6 @@ export async function fetchConversations() {
 }
 
 /**
- * Fetches which AI providers are configured on the backend.
- */
-export async function fetchProviderStatus() {
-  const res = await fetch(`${BASE_URL}/chat/providers`);
-  if (!res.ok) throw new Error('Failed to load provider status');
-  return res.json();
-}
-
-/**
  * Fetches a single conversation by ID.
  */
 export async function fetchConversation(id) {
@@ -38,8 +29,8 @@ export async function deleteConversation(id) {
 
 /**
  * Sends a message and streams the response via SSE.
- * The active AI provider is determined by AI_PROVIDER in backend/.env.
- * Calls onMeta({ conversationId, conversationTitle, provider, model }) once,
+ * Backend runs available AI engines and streams the selected response.
+ * Calls onMeta({ conversationId, conversationTitle, mode }) once,
  * then onChunk(text) for each streaming token,
  * then onDone() when complete, or onError(msg) on failure.
  */

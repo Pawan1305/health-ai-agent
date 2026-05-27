@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Trash2, MoreHorizontal } from 'lucide-react';
+import { MessageSquare, Trash2 } from 'lucide-react';
 
 function timeAgo(dateStr) {
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -16,16 +16,10 @@ function timeAgo(dateStr) {
 
 function ConversationItem({ conv, isActive, onSelect, onDelete }) {
   const [hovering, setHovering] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const handleDelete = (e) => {
     e.stopPropagation();
-    if (confirmDelete) {
-      onDelete(conv._id);
-    } else {
-      setConfirmDelete(true);
-      setTimeout(() => setConfirmDelete(false), 3000);
-    }
+    onDelete(conv._id);
   };
 
   return (
@@ -36,7 +30,7 @@ function ConversationItem({ conv, isActive, onSelect, onDelete }) {
       transition={{ duration: 0.2 }}
       onClick={() => onSelect(conv._id)}
       onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => { setHovering(false); setConfirmDelete(false); }}
+      onMouseLeave={() => { setHovering(false); }}
       className={`relative flex items-start gap-2.5 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 group ${
         isActive
           ? 'bg-gradient-to-r from-cyan-500/15 to-indigo-500/10 border border-cyan-500/25'
@@ -63,12 +57,8 @@ function ConversationItem({ conv, isActive, onSelect, onDelete }) {
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.15 }}
             onClick={handleDelete}
-            title={confirmDelete ? 'Click again to confirm' : 'Delete conversation'}
-            className={`flex-shrink-0 p-1 rounded-md transition-colors ${
-              confirmDelete
-                ? 'bg-red-500/20 text-red-400'
-                : 'text-gray-600 hover:text-red-400 hover:bg-red-500/10'
-            }`}
+            title="Delete conversation"
+            className="flex-shrink-0 p-1 rounded-md transition-colors text-gray-600 hover:text-red-400 hover:bg-red-500/10"
           >
             <Trash2 size={13} />
           </motion.button>
