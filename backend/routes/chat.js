@@ -11,21 +11,23 @@ const chatGPTClient = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || '',
 });
 
-const GEMINI_MODEL = 'gemini-2.0-flash';
+const GEMINI_MODEL = process.env.GEMINI_MODEL?.trim() || 'gemini-1.5-flash-latest';
 const GPT_MODEL = process.env.OPENAI_MODEL?.trim() || 'gpt-4o-mini';
 const GEMINI_FALLBACK_MODELS = [
   GEMINI_MODEL,
-  'gemini-2.5-flash',
-  'gemini-2.0-flash-lite',
   'gemini-1.5-flash-latest',
+  'gemini-1.5-pro-latest',
+  'gemini-1.5-flash-8b',
   'gemini-1.5-flash',
+  'gemini-2.0-flash',
+  'gemini-2.5-flash',
 ];
 const GPT_FALLBACK_MODELS = [GPT_MODEL, 'gpt-4o-mini', 'gpt-4.1-mini'];
 const LARGE_RESPONSE_THRESHOLD = Number(process.env.AI_FILTER_THRESHOLD || 2200);
 
 const ENGINE_INFO = {
   insightA: { label: 'OpenAI', model: GPT_MODEL },
-  insightB: { label: 'Gemini', model: process.env.GEMINI_MODEL?.trim() || GEMINI_MODEL },
+  insightB: { label: 'Gemini', model: GEMINI_MODEL },
 };
 
 /**
@@ -147,7 +149,7 @@ function uniqueNonEmpty(list = []) {
 
 function summarizeErrorMessage(error) {
   const raw = error?.message || 'Unknown error';
-  return raw.replace(/\s+/g, ' ').slice(0, 180);
+  return raw.replace(/\s+/g, ' ').slice(0, 400);
 }
 
 function buildLocalFallbackGuidance(userMessage = '') {
@@ -178,7 +180,7 @@ function buildUnavailableResponse({ failures = [] }) {
     : '- No detailed engine diagnostics available.';
 
   const modelHint = hasGeminiModelIssue
-    ? '- Set GEMINI_MODEL in backend/.env to a model available for your key (example: gemini-1.5-flash-latest)'
+    ? '- Set GEMINI_MODEL to one available for your key (try: gemini-1.5-flash-latest, gemini-1.5-pro-latest, or gemini-1.5-flash-8b)'
     : '- If you configured OPENAI_MODEL or GEMINI_MODEL, try removing custom model overrides';
 
   const exposeDiagnostics = process.env.SHOW_ENGINE_DIAGNOSTICS === 'true';
