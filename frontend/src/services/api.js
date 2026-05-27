@@ -29,7 +29,7 @@ export async function deleteConversation(id) {
 
 /**
  * Sends a message and streams the response via SSE.
- * Backend runs available AI engines and streams the selected response.
+ * Backend analyzes multiple AI responses and streams the selected response.
  * Calls onMeta({ conversationId, conversationTitle, mode }) once,
  * then onChunk(text) for each streaming token,
  * then onDone() when complete, or onError(msg) on failure.
