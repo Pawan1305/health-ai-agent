@@ -29,20 +29,7 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin(origin, callback) {
-    // Allow non-browser requests (curl/postman/server-to-server)
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
-    if (allowVercelPreviews && /\.vercel\.app$/i.test(origin)) {
-      return callback(null, true);
-    }
-
-    return callback(new Error('Not allowed by CORS'));
-  },
+  origin: true,
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
